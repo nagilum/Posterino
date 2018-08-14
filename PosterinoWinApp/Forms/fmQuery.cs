@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
@@ -98,45 +100,54 @@ namespace PosterinoWinApp.Forms {
         /// Query the resource.
         /// </summary>
         private void btSend_Click(object sender, EventArgs e) {
+            var url = this.tbURL.Text.Trim();
+            var headers = new Dictionary<string, string>();
+
+            if (!string.IsNullOrWhiteSpace(this.tbHeaderKey1.Text)) {
+                headers.Add(this.tbHeaderKey1.Text.Trim(), this.tbHeaderValue1.Text.Trim());
+            }
+
+            if (!string.IsNullOrWhiteSpace(this.tbHeaderKey2.Text)) {
+                headers.Add(this.tbHeaderKey2.Text.Trim(), this.tbHeaderValue2.Text.Trim());
+            }
+
+            if (!string.IsNullOrWhiteSpace(this.tbHeaderKey3.Text)) {
+                headers.Add(this.tbHeaderKey3.Text.Trim(), this.tbHeaderValue3.Text.Trim());
+            }
+
+            if (!string.IsNullOrWhiteSpace(this.tbHeaderKey4.Text)) {
+                headers.Add(this.tbHeaderKey4.Text.Trim(), this.tbHeaderValue4.Text.Trim());
+            }
+
             try {
-                var req = WebRequest.Create(this.tbURL.Text.Trim()) as HttpWebRequest;
+                var req = WebRequest.Create(url) as HttpWebRequest;
 
                 if (req == null) {
                     throw new Exception(
                         string.Format(
                             "Could not create WebRequest for URL: {0}",
-                            this.tbURL.Text.Trim()));
+                            url));
                 }
 
                 // Method
                 req.Method = this.cbMethod.SelectedItem.ToString().ToUpper();
 
-                // Header 1
-                if (!string.IsNullOrWhiteSpace(this.tbHeaderKey1.Text)) {
-                    req.Headers.Add(
-                        this.tbHeaderKey1.Text.Trim(),
-                        this.tbHeaderValue1.Text.Trim());
-                }
+                // Headers
+                if (headers.Any()) {
+                    foreach (var header in headers) {
+                        switch (header.Key.ToLower()) {
+                            case "content-length":
+                                if (long.TryParse(header.Value, out var temp)) {
+                                    req.ContentLength = temp;
+                                }
 
-                // Header 2
-                if (!string.IsNullOrWhiteSpace(this.tbHeaderKey2.Text)) {
-                    req.Headers.Add(
-                        this.tbHeaderKey2.Text.Trim(),
-                        this.tbHeaderValue2.Text.Trim());
-                }
+                                break;
 
-                // Header 3
-                if (!string.IsNullOrWhiteSpace(this.tbHeaderKey3.Text)) {
-                    req.Headers.Add(
-                        this.tbHeaderKey3.Text.Trim(),
-                        this.tbHeaderValue3.Text.Trim());
-                }
-
-                // Header 4
-                if (!string.IsNullOrWhiteSpace(this.tbHeaderKey4.Text)) {
-                    req.Headers.Add(
-                        this.tbHeaderKey4.Text.Trim(),
-                        this.tbHeaderValue4.Text.Trim());
+                            default:
+                                req.Headers.Add(header.Key, header.Value);
+                                break;
+                        }
+                    }
                 }
 
                 // Body
