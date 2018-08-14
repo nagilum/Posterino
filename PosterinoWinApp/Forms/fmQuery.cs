@@ -100,6 +100,9 @@ namespace PosterinoWinApp.Forms {
         /// Query the resource.
         /// </summary>
         private void btSend_Click(object sender, EventArgs e) {
+            this.btSend.Text = "Working";
+            Application.DoEvents();
+
             var url = this.tbURL.Text.Trim();
             var headers = new Dictionary<string, string>();
 
@@ -189,6 +192,8 @@ namespace PosterinoWinApp.Forms {
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
+
+            this.btSend.Text = "Send";
         }
     }
 }
