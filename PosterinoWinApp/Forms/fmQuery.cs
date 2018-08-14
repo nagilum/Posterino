@@ -27,18 +27,18 @@ namespace PosterinoWinApp.Forms {
         /// </summary>
         private void handleHttpWebResponse(HttpWebResponse res, TimeSpan time) {
             // Time
-            this.lblTime.Text = string.Format("{0} ms", time.Milliseconds);
+            this.lblTime.Text = string.Format("{0}ms", time.Milliseconds);
 
             if (time.Seconds > 0) {
                 this.lblTime.Text = string.Format(
-                    "{0} s, {1}",
+                    "{0}s, {1}",
                     time.Seconds,
                     this.lblTime.Text);
             }
 
             if (time.Minutes > 0) {
                 this.lblTime.Text = string.Format(
-                    "{0} m, {1}",
+                    "{0}m, {1}",
                     time.Minutes,
                     this.lblTime.Text);
             }
@@ -89,12 +89,9 @@ namespace PosterinoWinApp.Forms {
             }
 
             // Size
-            if (bytes > 1024) {
-                this.lbSize.Text = string.Format("{0} KB", bytes / 1024);
-            }
-            else {
-                this.lbSize.Text = string.Format("{0} B", bytes);
-            }
+            this.lbSize.Text = bytes > 1024
+                ? string.Format("{0} KB", (double) bytes / 1024)
+                : string.Format("{0} B", bytes);
         }
 
         /// <summary>
