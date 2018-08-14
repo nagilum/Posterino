@@ -111,6 +111,9 @@ namespace PosterinoWinApp.Forms {
                             this.tbURL.Text.Trim()));
                 }
 
+                // Method
+                req.Method = this.cbMethod.SelectedItem.ToString().ToUpper();
+
                 // Header 1
                 if (!string.IsNullOrWhiteSpace(this.tbHeaderKey1.Text)) {
                     req.Headers.Add(
