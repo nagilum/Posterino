@@ -122,6 +122,12 @@ namespace PosterinoWinApp.Forms {
                 headers.Add(this.tbHeaderKey4.Text.Trim(), this.tbHeaderValue4.Text.Trim());
             }
 
+            if (!string.IsNullOrWhiteSpace(this.tbRequestBody.Text)) {
+                var bytes = Encoding.UTF8.GetBytes(this.tbRequestBody.Text);
+
+                headers.Add("Content-Length", bytes.Length.ToString());
+            }
+
             try {
                 var req = WebRequest.Create(url) as HttpWebRequest;
 
@@ -144,6 +150,10 @@ namespace PosterinoWinApp.Forms {
                                     req.ContentLength = temp;
                                 }
 
+                                break;
+
+                            case "content-type":
+                                req.ContentType = header.Value;
                                 break;
 
                             default:
